@@ -103,11 +103,6 @@ public class Grafo_LA extends Digrafo{
     
     public void opcional3(int source,int destination){
         ArrayList visited = new ArrayList();
-         if(opcionalAux(source,destination,visited)){
-             System.out.println("Si hay camino de "+source+" a "+destination);
-         }else{
-             System.out.println("No hay camino de "+source+" a "+destination);
-         }
     }
     
     private boolean opcionalAux(int s,int d,ArrayList visited){
@@ -117,6 +112,7 @@ public class Grafo_LA extends Digrafo{
         visited.add(s);
         if(s == d)return true;
         for(int hijo:  getSuccessors(s)){
+            System.out.println("Hijos "+hijo);    
             if(recorridoDFSAux(hijo,d,visited))return true;
         }
         return false;
