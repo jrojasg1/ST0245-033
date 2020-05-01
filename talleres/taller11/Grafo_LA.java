@@ -23,9 +23,11 @@ public class Grafo_LA extends Digrafo{
     */
     public Grafo_LA(int size) {
         super(size);
-        listaDeListas = new ArrayList(size);
+	listaDeListas = new ArrayList<>();
+        for (int i = 0; i < size + 1; i++) {
+            listaDeListas.add(new LinkedList<>());   
+        }
         
-        // >>> ???
     }
 
  
@@ -38,9 +40,10 @@ public class Grafo_LA extends Digrafo{
     * @param weight el peso de la longitud entre source y destination
     */
     public void addArc(int source, int destination, int weight) {
-        LinkedList<Pair<Integer,Integer>> destinos = listaDeListas.get(source);
-        Pair<Integer,Integer> nuevoDestinoYsuPeso = new Pair(destination, weight);
-        destinos.add(nuevoDestinoYsuPeso);
+         listaDeListas.get(source).add(new Pair<>(destination,weight));
+//        LinkedList<Pair<Integer,Integer>> destinos = listaDeListas.get(source);
+//        Pair<Integer,Integer> nuevoDestinoYsuPeso = new Pair(destination, weight);
+//        destinos.add(nuevoDestinoYsuPeso);
     }
 
  
@@ -53,18 +56,13 @@ public class Grafo_LA extends Digrafo{
     * Para más información de las clases:
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html"> Ver documentacion ArrayList </a>
     */
-//    LinkedList<Pair<Integer,Integer>> destinos;
-//    int vec[];
-//    public ArrayList<Integer> getSuccessors(int vertex) {
-//        ArrayList<Integer> sucesores = new ArrayList<Integer>();
-//        for (int i = 0; i < size; i++) {
-//            if (destinos.){
-//                sucesores.add(i);
-//            }
-//        }   
-//        return null;
-//        
-//    }
+    
+    public ArrayList<Integer> getSuccessors(int vertex) {
+        ArrayList<Integer> sucesores = new ArrayList<Integer>();        
+        listaDeListas.get(vertex).forEach(i -> sucesores.add(i.getKey())); 
+        return sucesores;
+        
+    }
 
  
 
@@ -77,19 +75,10 @@ public class Grafo_LA extends Digrafo{
     */    
     public int getWeight(int source, int destination) {
         int cont = 0;
-        LinkedList<Pair<Integer,Integer>> destinos = listaDeListas.get(source);
-        destinos.listIterator(source);
-        while(destinos.listIterator(source).nextIndex() != destination){
-            cont ++;
+        for (Pair<Integer, Integer> integerIntegerPair : listaDeListas.get(source)) {
+            if (integerIntegerPair.getKey() == destination ) cont = integerIntegerPair.getValue();
         }
-                
         return cont;
-        
-    }
-
-    @Override
-    public ArrayList<Integer> getSuccessors(int vertex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
