@@ -5,7 +5,6 @@
  */
 package javaapplication17;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import javafx.util.Pair;
 
@@ -14,16 +13,22 @@ import javafx.util.Pair;
  * @author julianrojasgallego
  */
 public class Arbol {
+    
     public float laImpurezaDeLosDatosDeUnaMatriz(LinkedList<Estudiante> m){
         int losQueTienenExito = 0;
-        for (int fila = 0; fila < m.get(0).getVaribles().size(); fila++){
-            if (m.get(fila).getVaribles().get(m.get(0).getVaribles().size()-1).equals("1"))losQueTienenExito++;
+        int cont = 0;
+        for (int fila = 1; fila < m.size() ; fila++){
+            if (m.get(fila).getVaribles().get(m.get(fila).getVaribles().size()-1).equalsIgnoreCase("1")){
+                losQueTienenExito++;  
+            }       
         }
-        int losQueNoTienenExito = m.size() - losQueTienenExito;
-        float proporcionDeLosQueTienenExito = losQueTienenExito/m.size();
-        float proporcionDeLosQueNoTieneExito = losQueNoTienenExito/m.size();
-        System.out.println("proporcionDeLosQueTienenExito "+losQueTienenExito);
-        float impureza = 1 - ((proporcionDeLosQueTienenExito*proporcionDeLosQueTienenExito) - (proporcionDeLosQueNoTieneExito*proporcionDeLosQueNoTieneExito));
+        int losQueNoTienenExito = m.size()-losQueTienenExito;
+        float proporcionDeLosQueTienenExito =(float) losQueTienenExito/(m.size()-1);
+        float proporcionDeLosQueNoTieneExito = (float) losQueNoTienenExito/(m.size()-1);
+        System.out.println("no exito "+proporcionDeLosQueNoTieneExito);
+        float imp = (proporcionDeLosQueTienenExito*proporcionDeLosQueTienenExito)-(proporcionDeLosQueNoTieneExito*proporcionDeLosQueNoTieneExito);
+        System.out.println("proporcion "+imp);
+        float impureza = 1 - imp;
         return impureza;       
     }
     
@@ -49,7 +54,7 @@ public class Arbol {
         }
     }
     
-        System.out.println("EstudiantesLaVariableEsIgualAlValor "+matrizLaVariableEsIgualAlValor.size() ) ;
+//        System.out.println("EstudiantesLaVariableEsIgualAlValor "+matrizLaVariableEsIgualAlValor.size() ) ;
         Pair<LinkedList<Estudiante>,LinkedList<Estudiante>> parejaDeMatrices = new Pair<LinkedList<Estudiante>,LinkedList<Estudiante>>(matrizLaVariableEsIgualAlValor,matrizLaVariableNOEsIgualAlValor);
         return parejaDeMatrices;
     }
