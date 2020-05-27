@@ -6,6 +6,7 @@
 package javaapplication17;
 
 import java.util.LinkedList;
+import java.util.TreeSet;
 import javafx.util.Pair;
 
 /**
@@ -25,9 +26,7 @@ public class Arbol {
         int losQueNoTienenExito = m.size()-losQueTienenExito;
         float proporcionDeLosQueTienenExito =(float) losQueTienenExito/(m.size()-1);
         float proporcionDeLosQueNoTieneExito = (float) losQueNoTienenExito/(m.size()-1);
-        System.out.println("no exito "+proporcionDeLosQueNoTieneExito);
-        float imp = (proporcionDeLosQueTienenExito*proporcionDeLosQueTienenExito)-(proporcionDeLosQueNoTieneExito*proporcionDeLosQueNoTieneExito);
-        System.out.println("proporcion "+imp);
+        float imp = (proporcionDeLosQueTienenExito*proporcionDeLosQueTienenExito)+(proporcionDeLosQueNoTieneExito*proporcionDeLosQueNoTieneExito);       
         float impureza = 1 - imp;
         return impureza;       
     }
@@ -58,4 +57,41 @@ public class Arbol {
         Pair<LinkedList<Estudiante>,LinkedList<Estudiante>> parejaDeMatrices = new Pair<LinkedList<Estudiante>,LinkedList<Estudiante>>(matrizLaVariableEsIgualAlValor,matrizLaVariableNOEsIgualAlValor);
         return parejaDeMatrices;
     }
+    
+    public  TreeSet<String> posiblesValoresSinRepetirDeUnaVariable(LinkedList<Estudiante> m, int variable){
+        TreeSet<String> respuesta = new TreeSet();
+        for (int fila = 1; fila < m.size(); fila++)
+        respuesta.add(m.get(fila).getVaribles().get(variable));
+        return respuesta;
+    }
+    
+    public float calcularElGiniPonderado(LinkedList<Estudiante> laMatrizDelNodoDeLaIzquierda, LinkedList<Estudiante> laMatrizDelNodoDeLaDerecha){
+        
+        float elGiniDeLaMatrizDeLaIzquierda = laImpurezaDeLosDatosDeUnaMatriz(laMatrizDelNodoDeLaIzquierda);
+        float elGiniDeLaMatrizDeLaDerecha = laImpurezaDeLosDatosDeUnaMatriz(laMatrizDelNodoDeLaDerecha);
+        float elGiniPonderado = (elGiniDeLaMatrizDeLaIzquierda*laMatrizDelNodoDeLaIzquierda.size() +  elGiniDeLaMatrizDeLaDerecha*laMatrizDelNodoDeLaDerecha.size()) /  (laMatrizDelNodoDeLaIzquierda.size() + laMatrizDelNodoDeLaDerecha.size());
+        
+        return elGiniPonderado;
+    }
+    
+    
+    public Pair<Integer,String> encontrarEnQuePosEstaLaMejorVariableYQueValorDeboCompararEnLaCondicion(LinkedList<Estudiante> m){
+    float laImpurezaMenorDentreTodoElmundo = 1;
+    String elMejorValorDentreTodoElMundo = "";
+    int laPosDeLaVariableDondeEstaElMejorValor = -1;
+    for (int columna = 0; columna < m.size() - 1; columna++){
+        TreeSet<String> valores = posiblesValoresSinRepetirDeUnaVariable(m, columna);
+        for (String unValor : valores){
+            Pair<LinkedList<Estudiante>,LinkedList<Estudiante>> matrizdividida = dividirUnaMatrizEnDosMatrices(m, columna, unValor);
+            float impurezaPonderadaDeEstaColumnaConEsteValor = calcularElGiniPonderado(matrizdividida.getKey(),matrizdividida.getValue());
+            if (impurezaPonderadaDeEstaColumnaConEsteValor < laImpurezaMenorDentreTodoElmundo){
+                laImpurezaMenorDentreTodoElmundo = impurezaPonderadaDeEstaColumnaConEsteValor;
+                elMejorValorDentreTodoElMundo = unValor;
+                laPosDeLaVariableDondeEstaElMejorValor = columna;
+            }
+        }
+    }
+    Pair<Integer,String> respuesta = new Pair(laPosDeLaVariableDondeEstaElMejorValor, elMejorValorDentreTodoElMundo);
+    return respuesta;
+}
 }
