@@ -65,11 +65,11 @@ public class Arbol {
         return respuesta;
     }
     
-    public float calcularElGiniPonderado(LinkedList<Estudiante> laMatrizDelNodoDeLaIzquierda, LinkedList<Estudiante> laMatrizDelNodoDeLaDerecha){
-        
-        float elGiniDeLaMatrizDeLaIzquierda = laImpurezaDeLosDatosDeUnaMatriz(laMatrizDelNodoDeLaIzquierda);
-        float elGiniDeLaMatrizDeLaDerecha = laImpurezaDeLosDatosDeUnaMatriz(laMatrizDelNodoDeLaDerecha);
-        float elGiniPonderado = (elGiniDeLaMatrizDeLaIzquierda*laMatrizDelNodoDeLaIzquierda.size() +  elGiniDeLaMatrizDeLaDerecha*laMatrizDelNodoDeLaDerecha.size()) /  (laMatrizDelNodoDeLaIzquierda.size() + laMatrizDelNodoDeLaDerecha.size());
+    public float calcularElGiniPonderado(LinkedList<Estudiante> m,int variable, String valor){
+        Pair<LinkedList<Estudiante>,LinkedList<Estudiante>> parejaDeMatrices = dividirUnaMatrizEnDosMatrices(m,variable,valor);
+        float elGiniDeLaMatrizDeLaIzquierda = laImpurezaDeLosDatosDeUnaMatriz(parejaDeMatrices.getKey());
+        float elGiniDeLaMatrizDeLaDerecha = laImpurezaDeLosDatosDeUnaMatriz(parejaDeMatrices.getValue());
+        float elGiniPonderado = ((elGiniDeLaMatrizDeLaIzquierda*parejaDeMatrices.getKey().size()) + (elGiniDeLaMatrizDeLaDerecha*parejaDeMatrices.getValue().size())) /  (parejaDeMatrices.getKey().size() + parejaDeMatrices.getValue().size());
         
         return elGiniPonderado;
     }
@@ -79,11 +79,10 @@ public class Arbol {
     float laImpurezaMenorDentreTodoElmundo = 1;
     String elMejorValorDentreTodoElMundo = "";
     int laPosDeLaVariableDondeEstaElMejorValor = -1;
-    for (int columna = 0; columna < m.size() - 1; columna++){
+    for (int columna = 1; columna < m.size() - 1; columna++){
         TreeSet<String> valores = posiblesValoresSinRepetirDeUnaVariable(m, columna);
         for (String unValor : valores){
-            Pair<LinkedList<Estudiante>,LinkedList<Estudiante>> matrizdividida = dividirUnaMatrizEnDosMatrices(m, columna, unValor);
-            float impurezaPonderadaDeEstaColumnaConEsteValor = calcularElGiniPonderado(matrizdividida.getKey(),matrizdividida.getValue());
+            float impurezaPonderadaDeEstaColumnaConEsteValor = calcularElGiniPonderado(m, columna, unValor);
             if (impurezaPonderadaDeEstaColumnaConEsteValor < laImpurezaMenorDentreTodoElmundo){
                 laImpurezaMenorDentreTodoElmundo = impurezaPonderadaDeEstaColumnaConEsteValor;
                 elMejorValorDentreTodoElMundo = unValor;
@@ -94,4 +93,5 @@ public class Arbol {
     Pair<Integer,String> respuesta = new Pair(laPosDeLaVariableDondeEstaElMejorValor, elMejorValorDentreTodoElMundo);
     return respuesta;
 }
+    
 }
